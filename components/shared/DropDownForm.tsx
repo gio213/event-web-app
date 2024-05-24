@@ -26,10 +26,7 @@ type DropDownProps = {
 };
 
 const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
-  const [category, setCategory] = useState<ICategory[]>([
-    { _id: "1", name: "Category 1" },
-    { _id: "2", name: "Category 2" },
-  ]);
+  const [category, setCategory] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
 
   const handleAddCategory = () => {};
