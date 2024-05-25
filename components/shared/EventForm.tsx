@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import GetLocation, { atomLocation } from "./GetLocation";
+import { useAtom } from "jotai";
 import {
   Form,
   FormControl,
@@ -39,6 +40,8 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   const [files, setfiles] = useState<File[]>([]);
   const initialValues = eventDefaultValues;
 
+  const [location] = useAtom(atomLocation);
+
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues,
@@ -50,6 +53,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
   return (
     <Form {...form}>
       <form
@@ -131,15 +135,10 @@ const EventForm = ({ userId, type }: EventFormProps) => {
               <FormItem className="w-full">
                 <FormControl>
                   <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
-                    <Image
-                      src="/assets/icons/location-grey.svg"
-                      alt="location icon"
-                      width={24}
-                      height={24}
-                    />
+                    <GetLocation />
 
                     <Input
-                      placeholder="Event location or Online"
+                      placeholder={location || "Location or Online"}
                       {...field}
                       className="input-field"
                     />
@@ -298,6 +297,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           size={"lg"}
           type="submit"
           disabled={form.formState.isSubmitting}
+          onSubmit={form.handleSubmit(onSubmit)}
         >
           Submit
         </Button>
