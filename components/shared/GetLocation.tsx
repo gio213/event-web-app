@@ -4,7 +4,6 @@ import Image from "next/image";
 import { atom, useAtom } from "jotai";
 import { useFormContext } from "react-hook-form";
 import { LoadingSpinner } from "./Spinner";
-import { set } from "mongoose";
 
 // Define atomLocation atom
 export const atomLocation = atom("");

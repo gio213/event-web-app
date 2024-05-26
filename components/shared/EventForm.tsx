@@ -24,6 +24,7 @@ import { FileUploader } from "./FileUploader";
 import { useState } from "react";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
+import { LoadingSpinner } from "./Spinner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -250,6 +251,8 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                                 Free Ticket
                               </label>
                               <Checkbox
+                                onCheckedChange={field.onChange}
+                                checked={field.value}
                                 id="isFree"
                                 className="mr-2 h-5 w-5 border-2 border-primary-500"
                               />
@@ -299,7 +302,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           disabled={form.formState.isSubmitting}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          Submit
+          {form.formState.isSubmitting ? <LoadingSpinner /> : `${type} Event`}
         </Button>
       </form>
     </Form>

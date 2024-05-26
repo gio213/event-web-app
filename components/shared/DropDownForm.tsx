@@ -1,4 +1,4 @@
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -19,6 +19,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
+import {
+  createCategory,
+  getAllCategories,
+} from "@/lib/actions/category.actions";
 
 type DropDownProps = {
   value?: string;
@@ -26,10 +30,22 @@ type DropDownProps = {
 };
 
 const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
-  const [category, setCategory] = useState<ICategory[]>([]);
-  const [newCategory, setNewCategory] = useState<string>("");
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = () => {};
+  const handleAddCategory = () => {
+    createCategory({ categoryName: newCategory.trim() }).then((category) => {
+      setCategories((prevState) => [...prevState, category]);
+    });
+  };
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const categoryList = await getAllCategories();
+      categoryList && setCategories(categories as ICategory[]);
+    };
+    getCategories();
+  }, []);
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -37,8 +53,8 @@ const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
-        {category.length > 0 &&
-          category.map((category) => (
+        {categories.length > 0 &&
+          categories.map((category) => (
             <SelectItem
               className="select-item p-regular-14"
               value={category._id}
@@ -49,7 +65,7 @@ const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
           ))}
         <AlertDialog>
           <AlertDialogTrigger className="p-medium-14 flex w-full rounded-sm py-3 pl-8 text-primary-500 hover:bg-primary-50 focus:text-primary-500">
-            Open
+            Add new category
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-white">
             <AlertDialogHeader>
