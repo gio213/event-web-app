@@ -6,17 +6,18 @@ import { connectToDatabase } from "../mongodb/database";
 import Category from "../mongodb/database/models/category.model";
 
 
-export const createCategory = async (categoryName: CreateCategoryParams) => {
+export const createCategory = async ({ categoryName }: CreateCategoryParams) => {
     try {
         await connectToDatabase();
 
-        const newCategory = await Category.create({ name: categoryName });
+        const newCategory = await Category.create({ categoryName });
 
         return JSON.parse(JSON.stringify(newCategory));
 
     } catch (error) {
         console.error(error);
         handleError(error);
+        throw error; // Rethrow the error after handling it
     }
 };
 

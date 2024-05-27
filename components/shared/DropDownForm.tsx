@@ -33,16 +33,34 @@ const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = () => {
-    createCategory({ categoryName: newCategory.trim() }).then((category) => {
+  const handleAddCategory = async () => {
+    try {
+      const trimmedCategoryName = newCategory.trim();
+      if (!trimmedCategoryName) {
+        // Handle empty category name if needed
+        return;
+      }
+
+      const category = await createCategory({
+        categoryName: trimmedCategoryName,
+      });
       setCategories((prevState) => [...prevState, category]);
-    });
+    } catch (error) {
+      console.error("Error adding category:", error);
+      // Handle the error appropriately, e.g., show a notification to the user
+    }
   };
 
   useEffect(() => {
     const getCategories = async () => {
-      const categoryList = await getAllCategories();
-      categoryList && setCategories(categories as ICategory[]);
+      try {
+        const categoryList = await getAllCategories();
+        if (categoryList) {
+          setCategories(categoryList as ICategory[]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
     getCategories();
   }, []);
@@ -60,7 +78,7 @@ const DropDownForm = ({ value, onChangeHandler }: DropDownProps) => {
               value={category._id}
               key={category._id}
             >
-              {category.name}
+              {category.categoryName}
             </SelectItem>
           ))}
         <AlertDialog>

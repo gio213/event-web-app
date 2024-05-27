@@ -25,6 +25,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
 import { LoadingSpinner } from "./Spinner";
+import { useUploadThing, uploadFiles } from "@/lib/uploadthing";
+import { useRouter } from "next/navigation";
+import { createEvent } from "@/lib/actions/event.actions";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -40,8 +43,10 @@ type EventFormProps = {
 const EventForm = ({ userId, type }: EventFormProps) => {
   const [files, setfiles] = useState<File[]>([]);
   const initialValues = eventDefaultValues;
-
+  const router = useRouter();
   const [location] = useAtom(atomLocation);
+
+  const { startUpload } = useUploadThing("imageUploader");
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
@@ -49,10 +54,33 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
+  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    let uploadedImageUrl = values.imageUrl;
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
+      if (!uploadedImages) {
+        return;
+      }
+      uploadedImageUrl = uploadedImages[0].url;
+    }
+    if (type === "Create") {
+      try {
+        const newEvent = await createEvent({
+          event: { ...values, imageUrl: uploadedImageUrl },
+          userId,
+          path: "/profile",
+        });
+        if (newEvent) {
+          form.reset();
+          router.push(`/events/${newEvent._id}`);
+        }
+      } catch (error) {
+        console.error("Error creating event:", error);
+      }
+    }
   }
 
   return (
@@ -224,7 +252,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                 <FormControl>
                   <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
                     <Image
-                      src="/assets/icons/dollar.svg"
+                      src="/assets/icons/euro-sign.png"
                       alt="dollar icon"
                       width={24}
                       height={24}
