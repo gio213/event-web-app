@@ -28,7 +28,7 @@ const GetLocation = () => {
         if (response.data.results[0]) {
           const formattedAddress = response.data.results[0].formatted_address;
           setLocation(formattedAddress);
-          setValue("location", formattedAddress);
+          setValue("eventLocation", formattedAddress);
         }
 
         setLoading(false);

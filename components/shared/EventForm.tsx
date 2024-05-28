@@ -28,6 +28,7 @@ import { LoadingSpinner } from "./Spinner";
 import { useUploadThing, uploadFiles } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
 import { createEvent } from "@/lib/actions/event.actions";
+import Confett from "./Confetti";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -76,6 +77,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         if (newEvent) {
           form.reset();
           router.push(`/events/${newEvent._id}`);
+          <Confett />;
         }
       } catch (error) {
         console.error("Error creating event:", error);
@@ -159,7 +161,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
-            name="location"
+            name="eventLocation"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
