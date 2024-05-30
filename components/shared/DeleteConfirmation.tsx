@@ -16,7 +16,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-// import { deleteEvent } from "@/lib/actions/event.actions";
+import { deleteEvent } from "@/lib/actions/event.actions";
+import { LoadingSpinner } from "./Spinner";
 
 export const DeleteConfirmation = ({ eventId }: { eventId: string }) => {
   const pathname = usePathname();
@@ -47,12 +48,11 @@ export const DeleteConfirmation = ({ eventId }: { eventId: string }) => {
           <AlertDialogAction
             onClick={() =>
               startTransition(async () => {
-                // await deleteEvent({ eventId, path: pathname });
-                console.log("delete event");
+                await deleteEvent({ eventId, path: pathname });
               })
             }
           >
-            {isPending ? "Deleting..." : "Delete"}
+            {isPending ? <LoadingSpinner /> : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

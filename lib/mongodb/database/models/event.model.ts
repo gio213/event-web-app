@@ -9,8 +9,8 @@ export interface IEvent extends Document {
     createdAt?: Date;
     imageUrl: string;
     startDateTime: Date;
-    endDateTime?: Date;
-    price?: string;
+    endDateTime: Date;
+    price: string;
     isFree?: boolean;
     url?: string;
     category: { _id: string, categoryName: string }

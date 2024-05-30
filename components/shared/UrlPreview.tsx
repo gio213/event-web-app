@@ -43,25 +43,28 @@ export const UrlPreview = ({ url }: UrlPreviewProps) => {
   return (
     <div>
       {!urlData ? (
-        <div className="max-w-md mx-auto my-4 p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div className="w-full mx-auto my-4 p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
           <Link
             href={url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500"
           >
-            {url}
+            <p>
+              <strong>
+                <span className="text-blue-500">{url}</span>
+              </strong>
+            </p>
           </Link>
         </div>
       ) : (
         <div className="max-w-md mx-auto my-4 p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
           {urlData.images && urlData.images.length > 0 && (
-            <Image
+            <img
               src={urlData.images[0]}
               alt={urlData.title}
-              width={400}
-              height={200}
-              className="w-full h-48 object-cover rounded-lg"
+              height={400}
+              className=" w-full object-cover rounded-lg"
             />
           )}
           <div className="mt-4">
@@ -71,7 +74,7 @@ export const UrlPreview = ({ url }: UrlPreviewProps) => {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 mt-2 inline-block"
+              className="text-blue-500 mt-2 inline-block truncate w-full"
             >
               <p className="text-primary-500">{url}</p>
             </Link>

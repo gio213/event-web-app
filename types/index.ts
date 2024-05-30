@@ -40,7 +40,7 @@ export type UpdateEventParams = {
         title: string
         imageUrl: string
         description: string
-        location: string
+        eventLocation: string
         startDateTime: Date
         endDateTime: Date
         categoryId: string
@@ -108,7 +108,7 @@ export type CheckoutOrderParams = {
     eventTitle: string
     eventId: string
     price: string
-    isFree: boolean
+    isFree?: boolean
     buyerId: string
 }
 
