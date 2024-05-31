@@ -20,7 +20,6 @@ export const UrlPreview = ({ url }: UrlPreviewProps) => {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
       const data = await response.json();
-      console.log(data);
       setUrlData(data);
     } catch (error) {
       console.error("An error occurred:", error);

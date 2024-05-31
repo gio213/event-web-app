@@ -55,28 +55,30 @@ export const getEventById = async (eventId: string) => {
 }
 
 
-export const getAllEvents = async ({ query, limit = 6, page, category }: GetAllEventsParams) => {
-
+export async function getAllEvents({ query, limit = 6, page, category }: GetAllEventsParams) {
     try {
-
         await connectToDatabase()
-        const conditions: any = {}
 
-        const eventsQuery = Event.find(conditions).sort({ createdAt: "desc" }).skip(0).limit(limit)
+        const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {}
+        const categoryCondition = category ? await getCategoryByName(category) : null
+        const conditions = {
+            $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
+        }
+
+        const skipAmount = (Number(page) - 1) * limit
+        const eventsQuery = Event.find(conditions)
+            .sort({ createdAt: 'desc' })
+            .skip(skipAmount)
+            .limit(limit)
 
         const events = await populateEvent(eventsQuery)
-
         const eventsCount = await Event.countDocuments(conditions)
 
         return {
             data: JSON.parse(JSON.stringify(events)),
-            count: eventsCount,
-            totalPages: Math.ceil(eventsCount / limit)
+            totalPages: Math.ceil(eventsCount / limit),
         }
-
-
     } catch (error) {
-        console.error(error);
         handleError(error)
     }
 }

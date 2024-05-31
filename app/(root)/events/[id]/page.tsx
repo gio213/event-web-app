@@ -7,7 +7,6 @@ import {
 } from "@/lib/actions/event.actions";
 import { formatDateTime } from "@/lib/utils";
 import { SearchParamProps } from "@/types";
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import React from "react";
 
@@ -96,15 +95,15 @@ const EventDetails = async ({
         </div>
       </section>
       <section className="wrapper my-8 flex flex-col gap-8 md:gap-12">
-        <h2 className="h2-bold">Related Evvents</h2>
+        <h2 className="h2-bold">Related Events</h2>
         <Collection
           data={relatedEvents?.data}
-          emptyTitle="No related events found"
-          emptyStateSubText="Come back later"
+          emptyTitle="No Events Found"
+          emptyStateSubtext="Come back later"
           collectionType="All_Events"
-          limit={6}
-          page={1}
-          totalPages={2}
+          limit={3}
+          page={searchParams.page as string}
+          totalPages={relatedEvents?.totalPages}
         />
       </section>
     </>
